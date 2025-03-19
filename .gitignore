@@ -1,0 +1,8 @@
+# Ignore all files in the data directory, but keep the directory itself
+data/*
+!data/.gitkeep
+
+.env
+
+db*
+db/.gitkeep
