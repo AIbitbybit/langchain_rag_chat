@@ -9,25 +9,13 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 load_dotenv()
 
-# Define the directory containing the text file and the persistent directory
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-file_path = os.path.join(parent_dir, "data", "my_rental_contract.pdf")
-persistent_directory = os.path.join(current_dir, "db", "chroma_db_rental_contract")
 
 # Create embeddings
 print("\n--- Creating embeddings ---")
 embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
-# Check if the Chroma vector store already exists
-if not os.path.exists(persistent_directory):
-    print("Persistent directory does not exist. Initializing vector store...")
 
-    # Ensure the text file exists
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(
-            f"The file {file_path} does not exist. Please check the path."
-        )
+def init_vectorstore(file_path, db_dir):
 
     # Read the text content from the file
     loader = PyPDFLoader(file_path)
@@ -47,13 +35,13 @@ if not os.path.exists(persistent_directory):
 
     # Create the vector store and persist it automatically
     print("\n--- Creating vector store ---")
-    db = Chroma.from_documents(docs, embeddings, persist_directory=persistent_directory)
+    db = Chroma.from_documents(docs, embeddings, persist_directory=db_dir)
     print("\n--- Finished creating vector store ---")
 
-else:
 
+def query_vectorstore(query, db_dir):
     # Load the existing vector store with the embedding function
-    db = Chroma(persist_directory=persistent_directory, embedding_function=embeddings)
+    db = Chroma(persist_directory=db_dir, embedding_function=embeddings)
     # Define the user's question
     query = input("Add your question here: ")
 
@@ -98,3 +86,28 @@ else:
     # print(result)
     print("Content only:")
     print(result.content)
+
+
+def main():
+
+    # Define the directory containing the text file and the persistent directory
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(current_dir)
+    file_path = os.path.join(parent_dir, "data", "my_rental_contract.pdf")
+    persistent_directory = os.path.join(parent_dir, "db", "chroma_db_rental_contract")
+
+    # Check if the Chroma vector store already exists
+    if not os.path.exists(persistent_directory):
+        print("Persistent directory does not exist. Initializing vector store...")
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(
+                f"The file {file_path} does not exist. Please check the path."
+            )
+        init_vectorstore(file_path, persistent_directory)
+
+    query = input("Add your question here: ")
+    query_vectorstore(query, persistent_directory)
+
+
+if __name__ == "main":
+    main()
