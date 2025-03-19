@@ -2,8 +2,8 @@ import os  # noqa
 
 from dotenv import load_dotenv
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_chroma import Chroma
 from langchain_community.document_loaders import PyPDFLoader
-from langchain_community.vectorstores import Chroma
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
@@ -35,20 +35,19 @@ def init_vectorstore(file_path, db_dir):
 
     # Create the vector store and persist it automatically
     print("\n--- Creating vector store ---")
-    db = Chroma.from_documents(docs, embeddings, persist_directory=db_dir)
+    Chroma.from_documents(docs, embeddings, persist_directory=db_dir)
+
     print("\n--- Finished creating vector store ---")
 
 
 def query_vectorstore(query, db_dir):
     # Load the existing vector store with the embedding function
     db = Chroma(persist_directory=db_dir, embedding_function=embeddings)
-    # Define the user's question
-    query = input("Add your question here: ")
 
     # Retrieve relevant documents based on the query
     retriever = db.as_retriever(
-        search_type="similarity_score_threshold",
-        search_kwargs={"k": 3, "score_threshold": 0.3},
+        search_type="similarity",
+        search_kwargs={"k": 3},
     )
     relevant_docs = retriever.invoke(query)
 
@@ -109,5 +108,5 @@ def main():
     query_vectorstore(query, persistent_directory)
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     main()
