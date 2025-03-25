@@ -13,11 +13,22 @@ This repository contains a collection of Retrieval-Augmented Generation (RAG) ap
   - Provides a question-answering interface that retrieves relevant document chunks and uses ChatGPT to generate contextual answers
 
 - **Multiple PDFs RAG** (`rag_demos/rag_collection_of_pdfs.py`) - An enhanced RAG application that:
+
   - Processes all PDF files from a directory
   - Preserves document source and page information in metadata
   - Splits each document into chunks and combines them into a single vector store
   - Provides contextualized responses that cite the specific source documents and pages
   - Enables querying across multiple documents simultaneously
+
+- **RAG API Service** (`api/api.py` and `api/rag_service.py`) - A FastAPI-based service that:
+  - Provides RESTful API endpoints for RAG functionality
+  - Allows querying documents through HTTP requests
+  - Supports adding new PDF documents to the knowledge base
+  - Returns answers with source citations in JSON format
+  - Includes Swagger documentation for easy API exploration
+  - Can be run with `python run.py` and accessed at http://localhost:8000
+
+For more details on the API implementation, see the [API README](API_README.md).
 
 ## Setup
 
@@ -51,4 +62,10 @@ For multiple PDFs:
 python rag_demos/rag_collection_of_pdfs.py
 ```
 
-Follow the prompts to ask questions about your documents.
+For the API service:
+
+```bash
+python run.py
+```
+
+Follow the prompts to ask questions about your documents, or use the API endpoints at http://localhost:8000.
