@@ -7,16 +7,23 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.11,<4.0"
-dependencies = [
-    "langchain-community (>=0.3.20,<0.4.0)",
-    "langchain-openai (>=0.3.9,<0.4.0)",
-    "pypdf (>=5.4.0,<6.0.0)",
-    "chromadb (>=0.6.3,<0.7.0)",
-    "langchain-chroma (>=0.2.2,<0.3.0)"
-]
+requires-python = ">=3.9,<4.0"
 
+# Disable package mode - we're using Poetry for dependency management only
+package-mode = false
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = ">=3.9,<4.0"
+langchain = "^0.3.21"
+langchain-community = "^0.3.20"
+pypdf = "^5.4.0"
+chromadb = "^0.6.3"
+fastapi = "^0.108.0"
+uvicorn = "^0.25.0"
+python-dotenv = "^1.0.0"
+pydantic = "^2.5.0"
+langchain-openai = "^0.2.0"
